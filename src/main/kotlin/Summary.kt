@@ -1,3 +1,5 @@
-data class Summary(var income:Int,
-                   var expenses:Int,
-                   var balance:Int)
+data class Summary(
+    val income: Double,
+    val expenses: Double,
+    val remaining: Double
+)
