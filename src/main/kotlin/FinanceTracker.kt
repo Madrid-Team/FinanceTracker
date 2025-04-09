@@ -4,5 +4,5 @@ interface FinanceTracker {
     fun viewAllTransactions(transactions: List<Transaction>):String
     fun editTransaction(transactionId: Int)
     fun deleteTransaction(transactionId: Int)
-    fun getSummary(): Summary
+    fun getMonthSummary(month: Int, year: Int): Summary
 }
