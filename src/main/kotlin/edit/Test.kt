@@ -1,5 +1,6 @@
 package edit
 
+import Category
 import FinanceTrackerImpl
 
 fun main() {
@@ -31,6 +32,12 @@ fun main() {
     check(
         name = "Edit with no changes should return false",
         result = tracker.editTransaction(1),
+        correctResult = false
+    )
+
+    check(
+        name = "Edit new category with special character or numbers should return false",
+        result = tracker.editTransaction(2, newCategory = Category("Food123#")),
         correctResult = false
     )
 }
