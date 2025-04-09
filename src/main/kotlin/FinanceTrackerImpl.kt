@@ -30,7 +30,7 @@ object FinanceTrackerImpl : FinanceTracker {
         TODO("Not yet implemented")
     }
 
-    override fun getMonthlySummary(month: Int, year: Int): Summary {
+    override fun getMonthlySummary(month: Int?, year: Int): Summary {
     if(!transactions.isNullOrEmpty()) {
         val monthTransaction =
             _transactions.filter { if (month != null && month in 0..11) it.date.month == month && it.date.year == year else it.date.year == year }
@@ -43,4 +43,5 @@ object FinanceTrackerImpl : FinanceTracker {
             return  Summary(income = 0.0, expenses = 0.0, remaining = 0.0)
         }
     }
+
 }
