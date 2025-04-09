@@ -7,8 +7,8 @@ object FinanceTrackerImpl : FinanceTracker {
         TODO("Not yet implemented")
     }
 
-    override fun viewAllTransactions(): List<Transaction> {
-        TODO("Not yet implemented")
+    override fun viewAllTransactions(transactions: List<Transaction>):String {
+        return " "
     }
 
     override fun editTransaction(transactionId: Int) {
