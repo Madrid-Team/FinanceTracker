@@ -1,9 +1,24 @@
 import common.isValidCategory
-import java.util.*
 
 object FinanceTrackerImpl : FinanceTracker {
 
     private val _transactions: MutableList<Transaction> = mutableListOf()
+
+
+    fun getTransactionById(transactionId: Int): Transaction {
+        TODO()
+    }
+
+    fun handeEvents(event: FinanceTrackerEvents, onEventSuccess: () -> Unit, onEventFail: (cause: String) -> Unit) {
+
+        when (event) {
+            is FinanceTrackerEvents.EditTransaction -> editTransaction(
+                event.transaction
+            )
+        }
+
+
+    }
 
     override fun add(transaction: Transaction) {
         TODO("Not yet implemented")
@@ -14,32 +29,18 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun editTransaction(
-        transactionId: Int,
-        newType: TransactionType?,
-        newAmount: Double?,
-        newCategory: Category?,
-        newDate: Date?
-    ): Boolean {
+        transaction: Transaction,
+    ): Result {
+        return when {
+            transaction.amount <= 0 -> Result.Error(cause = "Amount must be greater than 0")
+            !transaction.category.name.isValidCategory() -> Result.Error(cause = "please provide a valid category name with more than 3 characters and no special characters")
+            else -> {
+                val transactionIndex = _transactions.indexOf(transaction)
+                _transactions[transactionIndex] = transaction
+                Result.Success
+            }
+        }
 
-        if (newAmount == null && newType == null && newDate == null && newCategory == null) return false
-
-        if (newAmount != null && newAmount <= 0 ) return false
-
-        if (newCategory != null && !newCategory.name.isValidCategory()) return false
-
-        val transaction = _transactions.find { it.id == transactionId } ?: return false
-
-        val transactionIndex = _transactions.indexOf(transaction)
-
-        val updatedTransaction = transaction.copy(
-            type = newType ?: transaction.type,
-            amount = newAmount ?: transaction.amount,
-            category = newCategory ?: transaction.category,
-            date = newDate ?: transaction.date
-        )
-
-        _transactions[transactionIndex] = updatedTransaction
-        return true
     }
 
     override fun deleteTransaction(transactionId: Int) {
