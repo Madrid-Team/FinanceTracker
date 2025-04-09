@@ -3,7 +3,7 @@ object FinanceTrackerImpl : FinanceTracker {
     private val _transactions: MutableList<Transaction> = mutableListOf()
     val transactions = _transactions.toList()
 
-    override fun add(transaction: Transaction) {
+    override fun add(transaction: Transaction): Boolean {
         TODO("Not yet implemented")
     }
 
