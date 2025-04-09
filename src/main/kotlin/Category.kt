@@ -1,2 +1,3 @@
-class Category {
-}
+data class Category(
+    val name: String,
+)
