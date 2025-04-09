@@ -15,18 +15,9 @@ object FinanceTrackerImpl : FinanceTracker {
         TODO("Not yet implemented")
     }
 
-    override fun deleteTransaction(transactionId: Int) {
-        // get the transaction
-        val transaction = transactions.find { transaction -> transaction.id == transactionId }
-        if (transaction == null) {
-            println("Transaction not found")
-            return
-        }
-
-        // Remove the transaction
-        _transactions.remove(transaction)
-
-        println("Transaction $transactionId has been deleted")
+    override fun deleteTransaction(transactionId: Int):Boolean {
+        val transactionToRemove = _transactions.find { it.id == transactionId } ?: return false
+        return _transactions.remove(transactionToRemove)
     }
 
     override fun getSummary(): Summary {
