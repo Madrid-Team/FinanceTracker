@@ -1,7 +1,7 @@
 import FinanceTrackerImpl.viewAllTransactions
 import java.util.*
 
-fun main(){
+fun main() {
     val categoryFood = Category("Food")
     val categorySalary = Category("Salary")
 
@@ -20,14 +20,25 @@ fun main(){
         category = categorySalary,
         date = Date(2025 - 1900, 3, 1)
     )
-   // val transactions = listOf(transaction1, transaction2)
-   // checkViewAllTransactions(name = "n1", result = viewAllTransactions(transactions), correctResult = "c1")
+    val transactions = listOf(transaction1)
+    val expected = """
+ ID: 1
+ Type: EXPENSES
+ Amount: 50.0
+ Category: Food
+ Date: Sat Apr 05 00:00:00 EET 2025
+""".trim()
+    checkViewAllTransactions(
+        name = "Test viewAllTransactions with one item",
+        result = viewAllTransactions(transactions), correctResult = expected
+    )
     val emptyTransactionsList = emptyList<Transaction>()
-    checkViewAllTransactions(name = "Test viewAllTransactions with empty transactions list",
+    checkViewAllTransactions(
+        name = "Test viewAllTransactions with empty transactions list",
         result = viewAllTransactions(emptyTransactionsList),
-        correctResult= "No transactions found.")
+        correctResult = "No transactions found."
+    )
 }
-
 
 
 fun checkViewAllTransactions(name: String, result: String, correctResult: String) {

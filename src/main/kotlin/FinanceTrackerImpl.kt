@@ -10,7 +10,16 @@ object FinanceTrackerImpl : FinanceTracker {
     override fun viewAllTransactions(transactions: List<Transaction>):String {
         if (transactions.isEmpty()) return "No transactions found."
         else{
-            return " "
+            var str = ""
+            for (trasaction in transactions){
+                str += "ID: ${trasaction.id}\n"
+                str += " Type: ${trasaction.type}\n"
+                str += " Amount: ${trasaction.amount}\n"
+                str += " Category: ${trasaction.category.name}\n"
+                str += " Date: ${trasaction.date}"
+
+            }
+            return str
         }
     }
 
