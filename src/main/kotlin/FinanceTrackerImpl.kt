@@ -12,14 +12,14 @@ object FinanceTrackerImpl : FinanceTracker {
         else{
             var str = ""
             for (trasaction in transactions){
-                str += "ID: ${trasaction.id}\n"
+                str += " ID: ${trasaction.id}\n"
                 str += " Type: ${trasaction.type}\n"
                 str += " Amount: ${trasaction.amount}\n"
                 str += " Category: ${trasaction.category.name}\n"
-                str += " Date: ${trasaction.date}"
+                str += " Date: ${trasaction.date}\n"
 
             }
-            return str
+            return str.trim()
         }
     }
 
