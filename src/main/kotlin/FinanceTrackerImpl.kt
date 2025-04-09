@@ -8,7 +8,10 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun viewAllTransactions(transactions: List<Transaction>):String {
-        return " "
+        if (transactions.isEmpty()) return "No transactions found."
+        else{
+            return " "
+        }
     }
 
     override fun editTransaction(transactionId: Int) {

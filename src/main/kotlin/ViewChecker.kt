@@ -20,17 +20,22 @@ fun main(){
         category = categorySalary,
         date = Date(2025 - 1900, 3, 1)
     )
-
-    val transactions = listOf(transaction1, transaction2)
-    checkViewAllTransactions(name = "n1", result = viewAllTransactions(transactions), correctResult = "c1")
+   // val transactions = listOf(transaction1, transaction2)
+   // checkViewAllTransactions(name = "n1", result = viewAllTransactions(transactions), correctResult = "c1")
+    val emptyTransactionsList = emptyList<Transaction>()
+    checkViewAllTransactions(name = "Test viewAllTransactions with empty transactions list",
+        result = viewAllTransactions(emptyTransactionsList),
+        correctResult= "No transactions found.")
 }
 
 
 
 fun checkViewAllTransactions(name: String, result: String, correctResult: String) {
     if (result == correctResult) {
-        println("Success -> $name")
+        println("Success -> $name \nExpected:$correctResult \nGot:$result")
+        println("_________________________________________________________________")
     } else {
         println("Failed->$name \nExpected:$correctResult \nGot:$result")
+        println("_________________________________________________________________")
     }
 }
