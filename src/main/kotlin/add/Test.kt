@@ -36,10 +36,24 @@ fun main() {
     )
 
     checkAddTransaction(
-        name = "when given a transaction with future date should return false",
+        name = "when given a transaction with blank category should return false",
         result = financeTrackerImp.add(
             Transaction(
                 id = 3,
+                type = TransactionType.EXPENSES,
+                amount = 1000.0,
+                category = Category("food"),
+                date = LocalDate.now()
+            )
+        ),
+        correctResult = false
+    )
+
+    checkAddTransaction(
+        name = "when given a transaction with future date should return false",
+        result = financeTrackerImp.add(
+            Transaction(
+                id = 4,
                 type = TransactionType.INCOME,
                 amount = 1000.0,
                 category = Category("bouns"),
