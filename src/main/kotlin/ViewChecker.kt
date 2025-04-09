@@ -38,16 +38,16 @@ fun main() {
         name = "Test viewAllTransactions with two items",
         result = viewAllTransactions(listOfTwoTransactions), correctResult = expected
     )
-//    checkViewAllTransactions(
-//        name = "Test viewAllTransactions with one item",
-//        result = viewAllTransactions(transactions), correctResult = expected
-//    )
-//    val emptyTransactionsList = emptyList<Transaction>()
-//    checkViewAllTransactions(
-//        name = "Test viewAllTransactions with empty transactions list",
-//        result = viewAllTransactions(emptyTransactionsList),
-//        correctResult = "No transactions found."
-//    )
+    checkViewAllTransactions(
+        name = "Test viewAllTransactions with one item",
+        result = viewAllTransactions(transactions), correctResult = expected
+    )
+    val emptyTransactionsList = emptyList<Transaction>()
+    checkViewAllTransactions(
+        name = "Test viewAllTransactions with empty transactions list",
+        result = viewAllTransactions(emptyTransactionsList),
+        correctResult = "No transactions found."
+    )
 }
 
 
