@@ -1,9 +1,9 @@
-import java.util.Date
+import java.util.*
 
-data class Transaction (
-    val id:Int,
-    val type:TransactionType,
-    val amount:Double,
-    val category:Category,
+data class Transaction(
+    val id: Int,
+    val type: TransactionType,
+    val amount: Double,
+    val category: Category,
     val date: Date,
 )
