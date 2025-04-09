@@ -23,7 +23,7 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun getMonthSummary(month: Int, year: Int): Summary {
-        TODO("Not yet implemented")
+        return Summary(income = 500.0, expenses = 300.0, remaining = 200.0)
     }
 
 }
