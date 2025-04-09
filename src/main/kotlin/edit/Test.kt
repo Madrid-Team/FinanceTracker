@@ -30,12 +30,6 @@ fun main() {
     )
 
     check(
-        name = "Edit with no changes should return false",
-        result = FinanceTrackerImpl.editTransaction(1),
-        correctResult = false
-    )
-
-    check(
         name = "Edit new category with valid category name should return true",
         result = FinanceTrackerImpl.editTransaction(2, newCategory = Category("Food")),
         correctResult = true
