@@ -1,5 +1,5 @@
 data class Summary(
-    val income: Int,
-    val expenses: Int,
-    val remaining: Int
+    val income: Double,
+    val expenses: Double,
+    val remaining: Double
 )
