@@ -17,7 +17,6 @@ object FinanceTrackerImpl : FinanceTracker {
                 str += " Amount: ${trasaction.amount}\n"
                 str += " Category: ${trasaction.category.name}\n"
                 str += " Date: ${trasaction.date}\n"
-
             }
             return str.trim()
         }
@@ -32,12 +31,37 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun getMonthlySummary(month: Int, year: Int): Summary {
-        val monthTransaction = _transactions.filter { it.date.month == month && it.date.year == year }
+    if(!transactions.isNullOrEmpty()) {
+        val monthTransaction =
+            _transactions.filter { if (month != null && month in 0..11) it.date.month == month && it.date.year == year else it.date.year == year }
         val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
         val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }
-
         val remaining = totalIncome - totalExpenses
         return Summary(income = totalIncome, expenses = totalExpenses, remaining = remaining)
     }
+        else{
+            return  Summary(income = 0.0, expenses = 0.0, remaining = 0.0)
+        }
+    }
+
+    //funValidate must be implement first but it may be Task for add /(IO) Team
+//    override fun viewBalanceReport(month: Int?, year: Int, category: Category): String {
+//
+//        val monthTransaction = _transactions.filter {
+//            if (month != null && month in 0..11) it.date.month == month && it.date.year == year
+//                    && category.name.equals(it.category.name, ignoreCase = true)
+//            else it.date.year == year  && category.name.equals(it.category.name, ignoreCase = true)
+//        }
+//        val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME  && category.name.equals(it.category.name, ignoreCase = true) }.sumOf { it.amount }
+//        val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES  && category.name.equals(it.category.name, ignoreCase = true) }.sumOf { it.amount }
+//        val remaining = totalIncome - totalExpenses
+//        return Summary(income = totalIncome, expenses = totalExpenses, remaining = remaining).toString()
+//
+//        TODO("Not yet implemented")
+//    }
+//    override fun viewBalanceReportCategory(month: Int?, year: Int, category: Category ,type: TransactionType): String{
+//
+//   return ""
+//    }
 
 }
