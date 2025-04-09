@@ -1,3 +1,5 @@
+import java.util.*
+
 object FinanceTrackerImpl : FinanceTracker {
 
     private val _transactions: MutableList<Transaction> = mutableListOf()
@@ -11,7 +13,13 @@ object FinanceTrackerImpl : FinanceTracker {
         TODO("Not yet implemented")
     }
 
-    override fun editTransaction(transactionId: Int) {
+    override fun editTransaction(
+        transactionId: Int,
+        newType: TransactionType?,
+        newAmount: Double?,
+        newCategory: Category?,
+        newDate: Date?
+    ): Boolean {
         TODO("Not yet implemented")
     }
 
