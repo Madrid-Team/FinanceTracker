@@ -16,7 +16,17 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun deleteTransaction(transactionId: Int) {
-        TODO("Not yet implemented")
+        // get the transaction
+        val transaction = transactions.find { transaction -> transaction.id == transactionId }
+        if (transaction == null) {
+            println("Transaction not found")
+            return
+        }
+
+        // Remove the transaction
+        _transactions.remove(transaction)
+
+        println("Transaction $transactionId has been deleted")
     }
 
     override fun getSummary(): Summary {
