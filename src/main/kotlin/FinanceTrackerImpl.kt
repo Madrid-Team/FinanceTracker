@@ -31,7 +31,7 @@ object FinanceTrackerImpl : FinanceTracker {
         TODO("Not yet implemented")
     }
 
-    override fun getMonthSummary(month: Int, year: Int): Summary {
+    override fun getMonthlySummary(month: Int, year: Int): Summary {
         val monthTransaction = _transactions.filter { it.date.month == month && it.date.year == year }
         val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
         val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }

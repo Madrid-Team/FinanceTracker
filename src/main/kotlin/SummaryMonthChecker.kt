@@ -1,7 +1,7 @@
 fun main() {
 
     val finance = FinanceTrackerImpl
-    val result = finance.getMonthSummary(month = 3, year = 2010)
+    val result = finance.getMonthlySummary(month = 3, year = 2010)
 
     val correctResultSummary = Summary(
         income = 500.0,
