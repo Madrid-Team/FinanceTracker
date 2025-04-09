@@ -7,11 +7,11 @@ object FinanceTrackerImpl : FinanceTracker {
         TODO("Not yet implemented")
     }
 
-    override fun viewAllTransactions(transactions: List<Transaction>):String {
+    override fun viewAllTransactions(transactions: List<Transaction>): String {
         if (transactions.isEmpty()) return "No transactions found."
-        else{
+        else {
             var str = ""
-            for (trasaction in transactions){
+            for (trasaction in transactions) {
                 str += " ID: ${trasaction.id}\n"
                 str += " Type: ${trasaction.type}\n"
                 str += " Amount: ${trasaction.amount}\n"
@@ -32,7 +32,12 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun getMonthSummary(month: Int, year: Int): Summary {
-        return Summary(income = 500.0, expenses = 300.0, remaining = 200.0)
+        val monthTransaction = _transactions.filter { it.date.month == month && it.date.year == year }
+        val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
+        val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }
+
+        val remaining = totalIncome - totalExpenses
+        return Summary(income = totalIncome, expenses = totalExpenses, remaining = remaining)
     }
 
 }
