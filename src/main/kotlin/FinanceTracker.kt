@@ -1,5 +1,8 @@
-import model.Summary
-
 interface FinanceTracker {
-    fun getMonthlySummary(month: Int, year: Int): Summary
+
+    fun add(transaction: Transaction)
+    fun viewAllTransactions(): List<Transaction>
+    fun editTransaction(transactionId: Int)
+    fun deleteTransaction(transactionId: Int)
+    fun getSummary(): Summary
 }
