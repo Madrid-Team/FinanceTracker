@@ -39,16 +39,18 @@ object FinanceTrackerImpl : FinanceTracker {
         }
     }
 
+
+
     override fun editTransaction(
         transaction: Transaction,
-    ): Result {
+    ): Result<Unit> {
         return when {
             transaction.amount <= 0 -> Result.Error(cause = "Amount must be greater than 0")
             !transaction.category.name.isValidCategory() -> Result.Error(cause = "please provide a valid category name with more than 3 characters and no special characters")
             else -> {
                 val transactionIndex = _transactions.indexOf(transaction)
                 _transactions[transactionIndex] = transaction
-                Result.Success
+                Result.Success(Unit)
             }
         }
 
@@ -60,7 +62,7 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun getMonthlySummary(month: Int?, year: Int): Summary {
-    if(!transactions.isNullOrEmpty()) {
+    if(!_transactions.isNullOrEmpty()) {
         val monthTransaction =
             _transactions.filter { if (month != null && month in 0..11) it.date.month == month && it.date.year == year else it.date.year == year }
         val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
