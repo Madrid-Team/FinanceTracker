@@ -1,6 +1,7 @@
 import common.isValidCategory
 
 import java.time.LocalDate
+import java.util.*
 
 object FinanceTrackerImpl : FinanceTracker {
 
@@ -25,7 +26,7 @@ object FinanceTrackerImpl : FinanceTracker {
     override fun add(transaction: Transaction): Boolean {
         if (transaction.amount <= 0) return false
         if (transaction.category.name.isBlank()) return false
-        if (transaction.date.isAfter(LocalDate.now())) return false
+        if (transaction.date.after(Date())) return false
 
         val nextId = if (_transactions.isEmpty()) 1 else _transactions.maxOf { it.id } + 1
         val newTransaction = transaction.copy(id = nextId)
