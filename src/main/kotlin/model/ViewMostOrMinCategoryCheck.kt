@@ -1,6 +1,7 @@
 package model
 
 import Category
+import FinanceTrackerImpl.viewMinCategory
 import FinanceTrackerImpl.viewMostcategory
 import Transaction
 import java.util.*
@@ -53,12 +54,28 @@ fun main() {
     val onItemTransactions = listOf<Transaction>(transaction1)
 
     val listOfTransactions = listOf(transaction1,transaction2,transaction3,transaction4 ,transaction5)
-    checkViewMostCategory("correct case ",viewMostcategory(3,2025-1900,listOfTransactions),"most category is  salary appears 3")
-    checkViewMostCategory("empty Transaction List ",viewMostcategory(3,2025-1900, transactions),"The List is empty ")
-    checkViewMostCategory("One Item in List ", viewMostcategory(3,2025-1900,onItemTransactions),"most category is  Food appears 1")
+    checkViewMostOrMinCategory("correct case in viewMostcategory",viewMostcategory(3,2025-1900,listOfTransactions),"most category is  salary appears 3")
+    checkViewMostOrMinCategory("empty Transaction List ",viewMostcategory(3,2025-1900, transactions),"The List is empty ")
+    checkViewMostOrMinCategory("One Item in List in viewMostcategory ", viewMostcategory(3,2025-1900,onItemTransactions),"most category is  Food appears 1")
+    checkViewMostOrMinCategory(
+        "correct case in viewMinCategory ",
+        viewMinCategory(3, 2025 - 1900, listOfTransactions),
+        "most category is  Food appears 2"
+    )
+    checkViewMostOrMinCategory(
+        "empty Transaction List  ",
+        viewMinCategory(3, 2025 - 1900, transactions),
+        "The List is empty "
+    )
+    checkViewMostOrMinCategory(
+        "One Item in List  in viewMinCategory",
+        viewMinCategory(3, 2025 - 1900, onItemTransactions),
+        "most category is  Food appears 1"
+    )
+
 }
 
-    fun checkViewMostCategory(caseName: String, result: String, correctResult: String) {
+    fun checkViewMostOrMinCategory(caseName: String, result: String, correctResult: String) {
         if (result == correctResult) {
             println("${caseName}   is Success")
         } else {
