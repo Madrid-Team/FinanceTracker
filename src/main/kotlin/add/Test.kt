@@ -7,6 +7,7 @@ import java.time.LocalDate
 
 fun main() {
     val financeTrackerImp = FinanceTrackerImpl
+
     checkAddTransaction(
         name = "when given a valid transaction should return true",
         result = financeTrackerImp.add(
