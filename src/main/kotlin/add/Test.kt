@@ -27,7 +27,7 @@ fun main() {
             Transaction(
                 id = 2,
                 type = TransactionType.EXPENSES,
-                amount = 1000.0,
+                amount = -1000.0,
                 category = Category("food"),
                 date = LocalDate.now()
             )
@@ -42,7 +42,7 @@ fun main() {
                 id = 3,
                 type = TransactionType.EXPENSES,
                 amount = 1000.0,
-                category = Category("food"),
+                category = Category(""),
                 date = LocalDate.now()
             )
         ),
