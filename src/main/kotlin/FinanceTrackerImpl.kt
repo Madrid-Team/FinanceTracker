@@ -46,10 +46,9 @@ object FinanceTrackerImpl : FinanceTracker {
      override fun viewMostcategory(month: Int?, year: Int ,transaction :List<Transaction> ):String{
       if (transaction.isNotEmpty()) {
           val monthTransaction: List<Transaction> = transaction.filter {
-              it.date.month == month && it.date.year == year
-//            else it.date.year == year
+              if (month != null && month in 0..11)     it.date.month == month && it.date.year == year
+              else  it.date.year == year
           }
-          println(monthTransaction)
           val mostFrequent = monthTransaction
               .groupingBy { it.category.name }
               .eachCount()
@@ -58,6 +57,23 @@ object FinanceTrackerImpl : FinanceTracker {
       }else {
           return "The List is empty "
       }
+
      }
+
+    override fun viewMinCategory(month: Int?, year: Int, transaction: List<Transaction>): String {
+        if (transaction.isNotEmpty()) {
+            val monthTransaction: List<Transaction> = transaction.filter {
+                if (month != null && month in 0..11)     it.date.month == month && it.date.year == year
+                else  it.date.year == year
+            }
+
+            val leastFrequent = monthTransaction
+                .groupingBy { it.category.name }
+                .eachCount()
+                .minByOrNull { it.value }
+            return "most category is  ${leastFrequent?.key} appears ${leastFrequent?.value}"
+        }else {
+            return "The List is empty "
+        }    }
 
 }
