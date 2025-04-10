@@ -1,3 +1,4 @@
+import java.time.LocalDate
 import java.util.Date
 
 data class Transaction (
@@ -5,5 +6,5 @@ data class Transaction (
     val type:TransactionType,
     val amount:Double,
     val category:Category,
-    val date: Date,
+    val date: LocalDate,
 )
