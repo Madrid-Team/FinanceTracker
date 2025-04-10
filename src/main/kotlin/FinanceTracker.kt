@@ -6,4 +6,6 @@ interface FinanceTracker {
     fun deleteTransaction(transactionId: Int)
     fun getMonthlySummary(month: Int?, year: Int): Summary
     fun viewMostcategory(month: Int?, year: Int ,transaction : List<Transaction> ):String
+
+    fun viewMinCategory(month: Int?, year: Int ,transaction : List<Transaction> ):String
 }
