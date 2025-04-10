@@ -43,5 +43,21 @@ object FinanceTrackerImpl : FinanceTracker {
             return  Summary(income = 0.0, expenses = 0.0, remaining = 0.0)
         }
     }
+     override fun viewMostcategory(month: Int?, year: Int ,transaction :List<Transaction> ):String{
+      if (transaction.isNotEmpty()) {
+          val monthTransaction: List<Transaction> = transaction.filter {
+              it.date.month == month && it.date.year == year
+//            else it.date.year == year
+          }
+          println(monthTransaction)
+          val mostFrequent = monthTransaction
+              .groupingBy { it.category.name }
+              .eachCount()
+              .maxByOrNull { it.value }
+          return "most category is  ${mostFrequent?.key} appears ${mostFrequent?.value}"
+      }else {
+          return "The List is empty "
+      }
+     }
 
 }
