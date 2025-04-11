@@ -23,15 +23,20 @@ object FinanceTrackerImpl : FinanceTracker {
 
     }
 
-    override fun add(transaction: Transaction): Boolean {
-        if (transaction.amount <= 0) return false
-        if (transaction.category.name.isBlank()) return false
-        if (transaction.date.after(Date())) return false
+    override fun add(transaction: Transaction): Result<Unit> {
+        return when{
+            transaction.amount <= 0 -> Result.Error("Please enter a valid amount - greater that zero")
+            transaction.category.name.isValidCategory() -> Result.Error("Please enter a valid category")
+            transaction.date.after(Date()) -> Result.Error("Please enter a valid date")
+            else-> {
+                val nextId = if (_transactions.isEmpty()) 1 else _transactions.maxOf { it.id } + 1
+                val newTransaction = transaction.copy(id = nextId)
+                _transactions.add(newTransaction)
+                Result.Success(Unit)
 
-        val nextId = if (_transactions.isEmpty()) 1 else _transactions.maxOf { it.id } + 1
-        val newTransaction = transaction.copy(id = nextId)
-        _transactions.add(newTransaction)
-        return true
+            }
+
+        }
 
     }
 
