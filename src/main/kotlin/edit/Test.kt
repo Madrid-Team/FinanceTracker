@@ -4,7 +4,6 @@ import Result
 
 fun main() {
 
-
 //    check(
 //        name = "Edit existing transaction should return true",
 //        result = FinanceTrackerImpl.editTransaction(1, newAmount = 200.0),
@@ -35,7 +34,7 @@ fun main() {
 //        correctResult = true
 //    )
 
-    check<Unit>(
+    check(
         name = "Edit new category with special character or numbers should return false",
         result = Result.Error(),
         correctResult = Result.Error()
@@ -43,11 +42,17 @@ fun main() {
 }
 
 fun <T> check(name: String, result: Result<T>, correctResult: Result<Unit>) {
-    val isResultSuccessful = result == correctResult
+    val passed = when {
+        result is Result.Success && correctResult is Result.Success -> result.data == correctResult.data
+        result is Result.Error && correctResult is Result.Error -> result.cause == correctResult.cause
+        else -> false
+    }
 
-    if (isResultSuccessful) {
-        println("success : $name")
+    if (passed) {
+        println("Success : $name")
     } else {
-        println("failed : $name")
+        println("Failed : $name")
+        println("Expected : $correctResult")
+        println("Got : $result")
     }
 }
