@@ -1,4 +1,5 @@
 import kotlinx.serialization.Serializable
+import java.time.LocalDate
 
 @Serializable
 data class Transaction(
@@ -6,5 +7,6 @@ data class Transaction(
     val type: TransactionType,
     val amount: Double,
     val category: Category,
-    val date: String, //change from date
+    @Serializable(with = LocalDateSerializer::class)
+    val date: LocalDate,
 )
