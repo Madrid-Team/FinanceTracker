@@ -1,0 +1,1 @@
+[{"id":1,"type":"INCOME","amount":1500.0,"category":{"name":"Salary"},"date":"2025-08-05"},{"id":2,"type":"INCOME","amount":10500.0,"category":{"name":"Salary2"},"date":"2025-09-05"}] 
