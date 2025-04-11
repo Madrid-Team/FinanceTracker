@@ -59,14 +59,14 @@ object FinanceTrackerImpl : FinanceTracker {
 
     override fun editTransaction(
         transaction: Transaction,
-    ): Result<Unit> {
+    ): String {
         return when {
-            transaction.amount <= 0 -> Result.Error(cause = "Amount must be greater than 0")
-            !transaction.category.name.isValidCategory() -> Result.Error(cause = "please provide a valid category name with more than 3 characters and no special characters")
+            transaction.amount <= 0 -> "Amount must be greater than 0"
+            !transaction.category.name.isValidCategory() ->  "please provide a valid category name with more than 3 characters and no special characters"
             else -> {
                 val transactionIndex = _transactions.indexOf(transaction)
                 _transactions[transactionIndex] = transaction
-                Result.Success(Unit)
+                "edited transaction successfully"
             }
         }
 
