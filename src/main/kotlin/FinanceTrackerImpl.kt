@@ -5,19 +5,8 @@ object FinanceTrackerImpl : FinanceTracker {
     private val _transactions: MutableList<Transaction> = mutableListOf()
 
 
-    fun getTransactionById(transactionId: Int): Transaction {
-        TODO()
-    }
-
-    fun handeEvents(event: FinanceTrackerEvents, onEventSuccess: () -> Unit, onEventFail: (cause: String) -> Unit) {
-
-        when (event) {
-            is FinanceTrackerEvents.EditTransaction -> editTransaction(
-                event.transaction
-            )
-        }
-
-
+    fun getTransactionById(transactionId: Int): Transaction? {
+        return _transactions.find { it.id == transactionId }
     }
 
     override fun add(transaction: Transaction) {
