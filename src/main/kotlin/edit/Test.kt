@@ -1,43 +1,37 @@
 package edit
 
+import Category
 import Result
+import Transaction
+import java.util.*
 
 fun main() {
-
-//    check(
-//        name = "Edit existing transaction should return true",
-//        result = FinanceTrackerImpl.editTransaction(1, newAmount = 200.0),
-//        correctResult = true
-//    )
-//
-//    check(
-//        name = "Try to edit non existing transaction should return false",
-//        result = FinanceTrackerImpl.editTransaction(1000, newAmount = 3000.0),
-//        correctResult = false
-//    )
-//
-//    check(
-//        name = "Add invalid new amount should return false",
-//        result = FinanceTrackerImpl.editTransaction(3, newAmount = -70.0),
-//        correctResult = false
-//    )
-//
-//    check(
-//        name = "Edit amount to zero should return false",
-//        result = FinanceTrackerImpl.editTransaction(1, newAmount = 0.0),
-//        correctResult = false
-//    )
-//
-//    check(
-//        name = "Edit new category with valid category name should return true",
-//        result = FinanceTrackerImpl.editTransaction(2, newCategory = Category("Food")),
-//        correctResult = true
-//    )
+    val transaction1 = Transaction(1, TransactionType.INCOME, 500.0, Category("Salary"), Date())
+    val transaction2 = Transaction(2, TransactionType.EXPENSES, 100.0, Category("Food"), Date())
 
     check(
-        name = "Edit new category with special character or numbers should return false",
-        result = Result.Error(),
-        correctResult = Result.Error()
+        name = "Edit existing transaction should return true",
+        result = FinanceTrackerImpl.editTransaction(transaction1.copy(amount = 500.0)),
+        correctResult = Result.Success(Unit)
+    )
+
+    check(
+        name = "Edit with invalid amount should return Error",
+        result = FinanceTrackerImpl.editTransaction(transaction2.copy(amount = -100.0)),
+        correctResult = Result.Error("Amount must be greater than 0")
+    )
+
+
+    check(
+        name = "Edit new category with valid category name should return true",
+        result = FinanceTrackerImpl.editTransaction(transaction1.copy(category = Category("Food"))),
+        correctResult = Result.Success(Unit)
+    )
+
+    check(
+        name = "Edit with invalid category name should return Error",
+        result = FinanceTrackerImpl.editTransaction(transaction1.copy(category = Category("12@"))),
+        correctResult = Result.Error("please provide a valid category name with more than 3 characters and no special characters")
     )
 }
 
