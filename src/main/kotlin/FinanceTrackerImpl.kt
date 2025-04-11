@@ -67,7 +67,7 @@ object FinanceTrackerImpl : FinanceTracker {
 
     }
 
-    override fun deleteTransaction(transactionId: Int):Boolean {
+    override fun deleteTransaction(transactionId: Int): Boolean {
         val transactionToRemove = _transactions.find { it.id == transactionId } ?: return false
         return _transactions.remove(transactionToRemove)
     }
