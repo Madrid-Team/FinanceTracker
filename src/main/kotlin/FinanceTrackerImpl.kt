@@ -72,9 +72,8 @@ object FinanceTrackerImpl : FinanceTracker {
 
     }
 
-    override fun deleteTransaction(transactionId: Int):Boolean {
-        val transactionToRemove = _transactions.find { it.id == transactionId } ?: return false
-        return _transactions.remove(transactionToRemove)
+    override fun deleteTransaction(transactionId: Int): Boolean {
+         return _transactions.removeIf {   it.id == transactionId}
     }
 
     override fun getMonthlySummary(month: Int?, year: Int): Summary {
