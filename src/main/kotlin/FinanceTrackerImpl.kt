@@ -2,6 +2,7 @@ import common.isValidCategory
 
 import java.time.LocalDate
 import java.util.*
+import java.util.Date
 
 object FinanceTrackerImpl : FinanceTracker {
 
@@ -23,7 +24,7 @@ object FinanceTrackerImpl : FinanceTracker {
 
     }
 
-    override fun addTransaction(transaction: Transaction): Boolean {
+          override fun addTransaction(transaction: Transaction): Boolean {
             if (transaction.amount <= 0) return false
             if (transaction.category.name.isBlank()) return false
             if (transaction.date.after(Date())) return false
@@ -33,7 +34,9 @@ object FinanceTrackerImpl : FinanceTracker {
             _transactions.add(newTransaction)
             return true
 
-    }
+        }
+
+
 
     override fun viewAllTransactions(transactions: List<Transaction>): String {
         if (transactions.isEmpty()) return "No transactions found."
