@@ -1,10 +1,12 @@
-object FinanceTrackerImpl : FinanceTracker {
+
+
+class FinanceTrackerImpl(logger: Logger) : FinanceTracker, Logger by logger {
 
     private val _transactions: MutableList<Transaction> = mutableListOf()
     val transactions = _transactions.toList()
 
     override fun add(transaction: Transaction) {
-        TODO("Not yet implemented")
+        println("Added transaction ${transaction.date}")
     }
 
     override fun viewAllTransactions(transactions: List<Transaction>): String {
@@ -27,7 +29,7 @@ object FinanceTrackerImpl : FinanceTracker {
     }
 
     override fun deleteTransaction(transactionId: Int) {
-        TODO("Not yet implemented")
+        println("Deleted Transaction")
     }
 
     override fun getMonthlySummary(month: Int?, year: Int): Summary {
@@ -37,6 +39,7 @@ object FinanceTrackerImpl : FinanceTracker {
         val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
         val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }
         val remaining = totalIncome - totalExpenses
+        println("Income $totalIncome Expenses: $totalExpenses")
         return Summary(income = totalIncome, expenses = totalExpenses, remaining = remaining)
     }
         else{
