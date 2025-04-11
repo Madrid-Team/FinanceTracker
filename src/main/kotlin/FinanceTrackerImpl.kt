@@ -29,7 +29,7 @@ object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
 
     private val filePath = "transactions.json"
 
-    override fun saveTransactions(transactions: List<Transaction>) {
+    override fun saveTransactions(transactions: Transaction) {
         val file = File(filePath)
 
         val existing = if (file.exists()) {

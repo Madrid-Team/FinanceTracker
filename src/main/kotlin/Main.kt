@@ -9,14 +9,9 @@ fun main() {
         Transaction(2, TransactionType.INCOME, 200.0, Category("Groceries"), LocalDate.now())
     )
 
-    val transaction2 = listOf(
-        Transaction(4, TransactionType.INCOME, 1500.0, Category("Freelance"), LocalDate.now())
-    )
+    val transaction2 = Transaction(7, TransactionType.INCOME, 1500.0, Category("Freelance"), LocalDate.now())
 
-    val transaction3 = listOf(
-        Transaction(2, TransactionType.EXPENSES, 100.0, Category("Food"), LocalDate.now())
-    )
-    tracker.saveTransactions(transaction3)
+    tracker.saveTransactions(transaction2)
 
     val loaded = loadTransactions()
     loaded.forEach {
