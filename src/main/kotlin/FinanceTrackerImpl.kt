@@ -30,8 +30,21 @@ object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
     private val filePath = "transactions.json"
 
     override fun saveTransactions(transactions: List<Transaction>) {
-        val json = Json.encodeToString(transactions)
-        File(filePath).writeText(json)
+        val file = File(filePath)
+
+        val existing = if (file.exists()) {
+            val json = file.readText()
+            Json.decodeFromString<List<Transaction>>(json)
+        } else {
+            emptyList()
+        }
+
+        val allTransactions = (existing + transactions)
+            .distinctBy { it.id }
+
+
+        val updatedJson = Json.encodeToString(allTransactions)
+        file.writeText(updatedJson)
     }
 
     override fun loadTransactions(): List<Transaction> {
