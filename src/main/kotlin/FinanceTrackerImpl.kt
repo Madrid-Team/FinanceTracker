@@ -12,16 +12,6 @@ object FinanceTrackerImpl : FinanceTracker {
         TODO()
     }
 
-    fun handeEvents(event: FinanceTrackerEvents, onEventSuccess: () -> Unit, onEventFail: (cause: String) -> Unit) {
-
-        when (event) {
-            is FinanceTrackerEvents.EditTransaction -> editTransaction(
-                event.transaction
-            )
-        }
-
-
-    }
 
     override fun add(transaction: Transaction): Result<Unit> {
         return when{
