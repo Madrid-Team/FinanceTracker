@@ -10,7 +10,7 @@ fun main() {
 
     checkAddTransaction(
         name = "when given a valid transaction should return true",
-        result = financeTrackerImp.add(
+        result = financeTrackerImp.addTransaction(
             Transaction(
                 id = 1,
                 type = TransactionType.INCOME,
@@ -24,7 +24,7 @@ fun main() {
 
     checkAddTransaction(
         name = "when given a transaction with amount naegative should return false",
-        result = financeTrackerImp.add(
+        result = financeTrackerImp.addTransaction(
             Transaction(
                 id = 2,
                 type = TransactionType.EXPENSES,
@@ -38,7 +38,7 @@ fun main() {
 
     checkAddTransaction(
         name = "when given a transaction with blank category should return false",
-        result = financeTrackerImp.add(
+        result = financeTrackerImp.addTransaction(
             Transaction(
                 id = 3,
                 type = TransactionType.EXPENSES,
@@ -52,7 +52,7 @@ fun main() {
 
     checkAddTransaction(
         name = "when given a transaction with future date should return false",
-        result = financeTrackerImp.add(
+        result = financeTrackerImp.addTransaction(
             Transaction(
                 id = 4,
                 type = TransactionType.INCOME,
