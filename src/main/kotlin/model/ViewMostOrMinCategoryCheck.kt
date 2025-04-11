@@ -4,6 +4,7 @@ import Category
 import FinanceTrackerImpl.viewMinCategory
 import FinanceTrackerImpl.viewMostcategory
 import Transaction
+import java.time.LocalDate
 import java.util.*
 
 fun main() {
@@ -19,7 +20,7 @@ fun main() {
         type = TransactionType.EXPENSES,
         amount = 50.0,
         category = categoryFood,
-        date = Date(2025 - 1900, 3, 5) // April 5, 2025
+        date = LocalDate.of(2025, 4, 5) // April 5, 2025
     )
 
     val transaction2 = Transaction(
@@ -27,28 +28,28 @@ fun main() {
         type = TransactionType.INCOME,
         amount = 1000.0,
         category = categorySalary,
-        date = Date(2025 - 1900, 3, 1)
+        date = LocalDate.of(2025, 4, 5) // April 5, 2025
     )
     val transaction3 = Transaction(
         id = 2,
         type = TransactionType.INCOME,
         amount = 1000.0,
         category = categorySalary2,
-        date = Date(2025 - 1900, 3, 1)
+        date = LocalDate.of(2025, 4, 5) // April 5, 2025
     )
     val transaction4 = Transaction(
         id = 2,
         type = TransactionType.INCOME,
         amount = 1000.0,
         category = categorySalary3,
-        date = Date(2025 - 1900, 3, 1)
+        date = LocalDate.of(2025, 4, 5) // April 5, 2025
     )
     val transaction5 = Transaction(
         id = 2,
         type = TransactionType.INCOME,
         amount = 1000.0,
         category = categorySalary4,
-        date = Date(2025 - 1900, 3, 1)
+        date = LocalDate.of(2025, 4, 5) // April 5, 2025
     )
     val transactions = listOf<Transaction>()
     val onItemTransactions = listOf<Transaction>(transaction1)

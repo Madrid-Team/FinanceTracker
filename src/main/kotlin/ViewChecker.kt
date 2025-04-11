@@ -1,5 +1,6 @@
 import FinanceTrackerImpl.viewAllTransactions
-import java.util.*
+import java.time.LocalDate
+
 
 fun main() {
     val categoryFood = Category("Food")
@@ -10,7 +11,7 @@ fun main() {
         type = TransactionType.EXPENSES,
         amount = 50.0,
         category = categoryFood,
-        date = Date(2025 - 1900, 3, 5) // April 5, 2025
+        date = LocalDate.of(2025,4,5) // April 5, 2025
     )
 
     val transaction2 = Transaction(
@@ -18,7 +19,7 @@ fun main() {
         type = TransactionType.INCOME,
         amount = 1000.0,
         category = categorySalary,
-        date = Date(2025 - 1900, 3, 1)
+        date = LocalDate.of(2025 , 3, 1)
     )
     val transactions = listOf(transaction1)
     val listOfTwoTransactions = listOf(transaction1,transaction2)
