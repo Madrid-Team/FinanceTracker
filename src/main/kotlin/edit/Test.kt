@@ -11,7 +11,7 @@ fun main() {
 
     check(
         name = "Edit existing transaction should return true",
-        result = FinanceTrackerImpl.editTransaction(transaction1.copy(amount = 500.0)),
+        result = FinanceTrackerImpl.editTransaction(transaction1.copy(amount = 600.0)),
         correctResult = Result.Success(Unit)
     )
 
@@ -46,7 +46,6 @@ fun <T> check(name: String, result: Result<T>, correctResult: Result<Unit>) {
         println("Success : $name")
     } else {
         println("Failed : $name")
-        println("Expected : $correctResult")
-        println("Got : $result")
+        println("Error : $result")
     }
 }

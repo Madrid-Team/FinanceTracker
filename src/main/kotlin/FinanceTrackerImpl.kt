@@ -35,9 +35,13 @@ object FinanceTrackerImpl : FinanceTracker {
             transaction.amount <= 0 -> Result.Error(cause = "Amount must be greater than 0")
             !transaction.category.name.isValidCategory() -> Result.Error(cause = "please provide a valid category name with more than 3 characters and no special characters")
             else -> {
-                val transactionIndex = _transactions.indexOf(transaction)
-                _transactions[transactionIndex] = transaction
-                Result.Success(Unit)
+                val transactionIndex = _transactions.indexOfFirst { it.id == transaction.id }
+                return if (transactionIndex != -1) {
+                    _transactions[transactionIndex] = transaction
+                    Result.Success(Unit)
+                } else {
+                    Result.Error("Transaction not found")
+                }
             }
         }
     }
