@@ -22,6 +22,7 @@ object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
         }
     }
 
+
     fun getTransactionById(transactionId: Int): Transaction? {
         return _transactions.find { it.id == transactionId }
     }
@@ -62,6 +63,7 @@ object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
         }
 
     }
+
 
     override fun deleteTransaction(transactionId: Int): Boolean {
         return _transactions.removeIf { it.id == transactionId }
@@ -137,10 +139,38 @@ object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
         file.writeText(updatedJson)
     }
 
+
     override fun loadTransactions(): List<Transaction> {
         val file = File(filePath)
         if (!file.exists()) return emptyList()
         val json = file.readText()
         return Json.decodeFromString(json)
+    }
+
+
+    override  fun deleteTransactionFromFile(transactionId: Int): String {
+        val file = File(filePath)
+
+        if (!file.exists()) {
+            // Nothing to delete if file doesn't exist
+            return "file doesn't exist"
+        }
+
+        //    t1        t2          t3             t4                   4
+        val existingJson = file.readText()
+        val existingTransactions = Json.decodeFromString<List<Transaction>>(existingJson)
+
+        // Filter out the transaction with the specified ID
+        val updatedTransactions = existingTransactions.filter { it.id != transactionId }
+
+        // If no transaction was removed, we can return early
+        if (updatedTransactions.size == existingTransactions.size) {
+            return "invalid ID, try again with other ID"
+        }
+
+        // Save the updated list back to the file
+        val updatedJson = Json.encodeToString(updatedTransactions)
+        file.writeText(updatedJson)
+        return "transaction deleted successfully"
     }
 }
