@@ -4,402 +4,253 @@ import common.parseDate
 import java.time.LocalDate
 
 fun main() {
-
-
-    val tracker = FinanceTrackerImpl
-    val transaction = Transaction(
-        7,
-        TransactionType.INCOME, 1500.0,
-        Category("Freelance"),
-        LocalDate.now()
-    )
-
-    fileHandler()
-
-
-    tracker.saveTransactions(transaction)
-
-    val loaded = loadTransactions()
-    loaded.forEach {
-        println("- ${it.id} : ${it.type} .. ${it.amount} .. ${it.category} .. ${it.date}")
-    }
-    view()
-
-}
-
-
-private fun fileHandler() {
     while (true) {
         println(
             """
             --------------------------
-            Enter 1 to view all transactions
-            Enter 2 to add transaction
-            Enter 3 to delete transaction
-            Enter 4 to go back
+            Finance Tracker
+            --------------------------
+            1 - Manage Transactions
+            2 - View Summary
+            3 - Exit
             --------------------------
         """.trimIndent()
         )
 
-        print("Selected option: ")
-
-        val option = try {
-            readln().toInt()
-        } catch (e: Exception) {
-            println("Please enter a valid number.")
-            continue
-        }
-
-        when (option) {
-            1 -> {
-                val loaded = loadTransactions()
-                loaded.forEach {
-                    println("- ${it.id} : ${it.type} .. ${it.amount} .. ${it.category} .. ${it.date}")
-                }
-            }
-
-            2 -> {
-                // todo add transaction by add sub-squad
-            }
-
+        print("Select an option: ")
+        when (readln().toIntOrNull()) {
+            1 -> transactionHandler()
+            2 -> view()
             3 -> {
-
-                print("Selected Transaction ID: ")
-                val transactionID = try {
-                    readln().toInt()
-                } catch (e: Exception) {
-                    println("Please enter a valid id.")
-                    continue
-                }
-                println(FinanceTrackerImpl.deleteTransactionFromFile(transactionID))
-
-
+                println("Goodbye!")
+                return
             }
 
-            4 -> {
-                break
-            }
+            else -> println("Invalid input. Please choose between 1 and 3.")
         }
+    }
+}
 
+private fun transactionHandler() {
+    while (true) {
+        println(
+            """
+            --------------------------
+            Transaction Management
+            --------------------------
+            1 - View all transactions
+            2 - Add transaction
+            3 - Edit transaction
+            4 - Delete transaction
+            5 - Go back
+            --------------------------
+        """.trimIndent()
+        )
 
+        print("Select an option: ")
+        when (readln().toIntOrNull()) {
+            1 -> loadTransactions().forEach {
+                println("- ${it.id} : ${it.type} .. ${it.amount} .. ${it.category} .. ${it.date}")
+            }
+
+            2 -> add()
+            3 -> edit()
+            4 -> deleteTransaction()
+            5 -> return
+            else -> println("Invalid option. Please choose from 1 to 5.")
+        }
     }
 }
 
 private fun view() {
-//    val tracker = FinanceTrackerImpl
-//    val transaction1 = Transaction(
-//        id = 1,
-//        type = TransactionType.EXPENSES,
-//        amount = 50.0,
-//        category = Category("Food"),
-//        date = Date(2025 - 1900, 3, 5) // April 5, 2025
-//    )
-//
-//    val transaction2 = Transaction(
-//        id = 2,
-//        type = TransactionType.INCOME,
-//        amount = 1000.0,
-//        category = Category("Salary"),
-//        date = Date(2025 - 1900, 3, 1)
-//    )
-//    val transactions = listOf(transaction1)
-//    val listOfTwoTransactions = listOf(transaction1,transaction2)
     while (true) {
         println(
             """
             --------------------------
-            Enter 1 to view all transactions
-            Enter 2 to view monthly summary
-            Enter 3 to view most used category
-            Enter 4 to go back
+            View Options
+            --------------------------
+            1 - View all transactions
+            2 - Monthly summary
+            3 - Most used category
+            4 - Least used category
+            5 - Go back
             --------------------------
         """.trimIndent()
         )
 
-        print("Selected option: ")
+        print("Select an option: ")
+        when (val option = readln().toIntOrNull()) {
+            1 -> println(FinanceTrackerImpl.viewAllTransactions(FinanceTrackerImpl.transactions))
 
-        val option = try {
-            readln().toInt()
-        } catch (e: Exception) {
-            println("Please enter a valid number.")
-            continue
-        }
-
-        when (option) {
-            1 -> {
-                val transactions = FinanceTrackerImpl.transactions
-                val result = FinanceTrackerImpl.viewAllTransactions(transactions)
-                println(result)
-            }
-
-            2 -> {
-                println("Enter year:")
+            2, 3, 4 -> {
+                print("Enter year: ")
                 val year = readln().toIntOrNull()
-                println("Enter month (1 to 12) or leave empty for full year:")
-                val monthInput = readln()
-                val month = if (monthInput.isNotBlank()) monthInput.toIntOrNull() else null
+
+                print("Enter month (1-12) or leave blank for full year: ")
+                val month = readln().takeIf { it.isNotBlank() }?.toIntOrNull()?.minus(1)
 
                 if (year != null) {
-                    val summary = FinanceTrackerImpl.getMonthlySummary(month?.minus(1), year)
-                    println("Income: ${summary.income}")
-                    println("Expenses: ${summary.expenses}")
-                    println("Remaining: ${summary.remaining}")
-                } else {
-                    println("Invalid year.")
-                }
+                    when (option) {
+                        2 -> {
+                            val summary = FinanceTrackerImpl.getMonthlySummary(month, year)
+                            println("Income: ${summary.income}, Expenses: ${summary.expenses}, Remaining: ${summary.remaining}")
+                        }
+
+                        3 -> {
+                            val transactions = FinanceTrackerImpl.transactions
+                            println(FinanceTrackerImpl.viewMostCategory(month, year, transactions))
+                        }
+
+                        4 -> {
+                            val transactions = FinanceTrackerImpl.transactions
+                            println(FinanceTrackerImpl.viewMinCategory(month, year, transactions))
+                        }
+                    }
+                } else println("Invalid year.")
             }
 
-            3 -> {
-                println("Enter year:")
-                val year = readln().toIntOrNull()
-                println("Enter month (1 to 12) or leave empty for full year:")
-                val monthInput = readln()
-                val month = if (monthInput.isNotBlank()) monthInput.toIntOrNull() else null
-
-                val transactions = FinanceTrackerImpl.transactions
-                if (year != null) {
-                    val result = FinanceTrackerImpl.viewMostcategory(month?.minus(1), year, transactions)
-                    println(result)
-                } else {
-                    println("Invalid year.")
-                }
-            }
-
-            4 -> break
-
-
-            else -> println("Please choose from 1 to 4 only.")
+            4 -> return
+            else -> println("Invalid option. Choose between 1 and 4.")
         }
     }
 }
 
 private fun add() {
-    var amount: Double? = null
-    var type: TransactionType? = null
-    var transaction: Transaction? = null
-    var category: Category? = null
-
-
-    println("Add transaction amount")
-    amount = readln().toDouble()
-    try {
-        if (amount <= 0)
-            println("amount is not valid - Enter a number bigger than zero")
-    } catch (e: Exception) {
-        println("amount must be a valid value")
-
-    }
-    println("Add transaction type")
-    println(
-        """
-        Enter 1 for -> Income  
-        Enter 2 for -> Expenses
-        
-        """.trimIndent()
-
-    )
-
-    val input = readln().toInt()
-    type = when (input) {
-        1 -> TransactionType.INCOME
-        2 -> TransactionType.EXPENSES
-        else -> {
-            println("Enter a valid value - either 1 for income or 2 for expenses")
-            return
-        }
-    }
-    //add transaction category
-    println("add transaction category")
-    val categoryInput = readln()
-    if (categoryInput.isValidCategory()) {
-        category = Category(name = categoryInput)
-    } else {
-        println("please enter a valid category")
+    print("Enter transaction amount: ")
+    val amount = readln().toDoubleOrNull()
+    if (amount == null || amount <= 0) {
+        println("Amount must be greater than 0.")
         return
     }
 
-    //id
+    println("Enter transaction type:\n1 - Income\n2 - Expenses")
+    val type = when (readln().toIntOrNull()) {
+        1 -> TransactionType.INCOME
+        2 -> TransactionType.EXPENSES
+        else -> {
+            println("Invalid type.")
+            return
+        }
+    }
+
+    print("Enter transaction category: ")
+    val categoryInput = readln()
+    if (!categoryInput.isValidCategory()) {
+        println("Invalid category.")
+        return
+    }
+
     val id = FinanceTrackerImpl.transactions.size + 1
+    val transaction = Transaction(id, type, amount, Category(categoryInput), LocalDate.now())
+    FinanceTrackerImpl.saveTransactions(transaction)
 
-
-    transaction = Transaction(id, type, amount, category, date = LocalDate.now())
-    val transactions = FinanceTrackerImpl.transactions
-    transactions.add(transaction)
-
-
+    println("Transaction added.")
 }
 
 private fun edit() {
+    print("Enter transaction ID: ")
+    val transaction = readln().toIntOrNull()?.let { FinanceTrackerImpl.getTransactionById(it) }
 
-    var category: String? = null
-    var amount: Double? = null
-    var type: TransactionType? = null
-    var date: LocalDate? = null
-    var option: Int? = null
-    var transaction: Transaction? = null
+    if (transaction == null) {
+        println("Transaction not found.")
+        return
+    }
 
-    do {
-        println("Please enter transaction id:")
-        val input = readln()
-        try {
-            val id = input.toInt()
-            transaction = FinanceTrackerImpl.getTransactionById(id)
-            if (transaction == null) {
-                println("Id not exist")
-            }
-        } catch (e: Exception) {
-            println("id must be number")
-        }
-    } while (transaction == null)
-
+    var updatedTransaction = transaction
 
     while (true) {
         println(
             """
-                
-            Enter 1 for edit the amount
-            Enter 2 for edit the category
-            Enter 3 for edit the type
-            Enter 4 for edit the date
-            Enter 5 for exit
-            
+            --------------------------
+            Edit Transaction
+            --------------------------
+            1 - Edit amount
+            2 - Edit category
+            3 - Edit type
+            4 - Edit date
+            5 - Save and exit
         """.trimIndent()
         )
-        println("selected option:")
-        try {
-            option = readln().toInt()
-        } catch (e: Exception) {
-            continue
-        }
 
-        when (option) {
+        print("Select an option: ")
+        when (readln().toIntOrNull()) {
             1 -> {
-                do {
-                    println("Please enter new amount:")
-                    try {
-                        amount = readln().toDouble()
-
-                        transaction = transaction?.copy(
-                            amount = amount
-                        )
-                    } catch (e: Exception) {
-                        println("amount must be number")
-                    }
-                } while (amount == null)
+                print("Enter new amount: ")
+                val newAmount = readln().toDoubleOrNull()
+                if (newAmount != null && newAmount > 0 && updatedTransaction != null) {
+                    updatedTransaction = updatedTransaction.copy(amount = newAmount)
+                } else println("Invalid amount.")
             }
 
             2 -> {
-                do {
-                    println("Please enter new category:")
-                    try {
-                        val input = readln()
-                        category = if (input.isValidCategory()) input else null
-                        transaction = transaction?.copy(
-                            category = Category(name = category!!)
-                        )
-                    } catch (e: Exception) {
-                        println("amount must be valid string")
-                    }
-                } while (category == null)
+                print("Enter new category: ")
+                val newCategory = readln()
+                if (newCategory.isValidCategory() && updatedTransaction != null) {
+                    updatedTransaction = updatedTransaction.copy(category = Category(newCategory))
+                } else println("Invalid category.")
             }
 
             3 -> {
-                do {
-                    println(
-                        """
-                            
-                            Please enter new type:
-                            0 for INCOME
-                            1 for EXPENSES
-                            
-                        """.trimIndent()
-                    )
-                    try {
-                        val input = readln().toInt()
-                        when (input) {
-                            0 -> {
-                                type = TransactionType.INCOME
-                                transaction = transaction?.copy(
-                                    type = type
-                                )
-                            }
-
-                            1 -> {
-                                type = TransactionType.EXPENSES
-                                transaction = transaction?.copy(
-                                    type = type
-                                )
-                            }
-
-                            else -> {
-                                println("please enter only 0 or 1")
-                            }
+                println("Enter new type: 1 - Income, 2 - Expenses")
+                if (updatedTransaction != null) {
+                    updatedTransaction = when (readln().toIntOrNull()) {
+                        1 -> updatedTransaction.copy(type = TransactionType.INCOME)
+                        2 -> updatedTransaction.copy(type = TransactionType.EXPENSES)
+                        else -> {
+                            println("Invalid type.")
+                            updatedTransaction
                         }
-                    } catch (e: Exception) {
-                        println("please enter only 0 or 1")
                     }
-                } while (type == null)
+                }
             }
 
             4 -> {
-
-                do {
-                    println("Please enter valid date (yy-mm-dd):")
-                    try {
-                        val input = readln()
-                        date = parseDate(input)
-                        transaction = transaction?.copy(
-                            date = date
-                        )
-                    } catch (e: Exception) {
-                        println("please enter valid date with this format yy-mm-dd")
-                    }
-                } while (date == null)
+                print("Enter new date (yyyy-mm-dd): ")
+                val date = try {
+                    parseDate(readln())
+                } catch (e: Exception) {
+                    println("Invalid date format.")
+                    null
+                }
+                if (date != null) if (updatedTransaction != null) {
+                    updatedTransaction = updatedTransaction.copy(date = date)
+                }
             }
 
             5 -> {
-                transaction?.let {
-                    FinanceTrackerImpl.editTransaction(transaction)
+                if (updatedTransaction != null) {
+                    FinanceTrackerImpl.editTransaction(updatedTransaction)
                 }
-                break
+                println("Transaction updated.")
+                return
             }
 
+            else -> println("Invalid option.")
         }
     }
-
 }
 
 private fun deleteTransaction() {
-    println("Please enter transaction with id: ")
+    while (true) {
+        print("Enter transaction ID to delete: ")
+        val id = readln().toIntOrNull()
 
-    lable1@ do {
-        try {
-            val idTransaction = readln().toInt()
-            val transactionDeleted = FinanceTrackerImpl.deleteTransaction(idTransaction)
-            if (transactionDeleted) {
-                println("Transaction deleted is successful")
-                break@lable1
-            } else {
-                println("Transaction not found do you want to continue?(y/n)")
-                do {
-                    try {
-                        val option = readln()
-                        if (option == "n") {
-                            break@lable1
-                        } else if (option == "y") {
-                            println("Done")
-                            break
-                        }
-                    } catch (e: Exception) {
-                        println("Please enter valid option: (y/n)")
-                    }
-                } while (true)
-
-            }
-        } catch (e: Exception) {
-            println("Please enter valid transaction id: ")
+        if (id == null) {
+            println("Invalid ID.")
+            continue
         }
-    } while (true)
 
-
+        val result = FinanceTrackerImpl.deleteTransaction(id)
+        if (result) {
+            println("Transaction deleted.")
+            return
+        } else {
+            println("Transaction not found. Try again? (y/n)")
+            when (readln().lowercase()) {
+                "n" -> return
+                "y" -> continue
+                else -> println("Invalid choice.")
+            }
+        }
+    }
 }

@@ -42,10 +42,10 @@ fun main() {
     check("Balanced Month Summary ", result, remainingSummary)
 }
 
-fun check(name: String, result: Summary, correctResult: Summary){
-    if (result == correctResult){
+fun check(name: String, result: Summary, correctResult: Summary) {
+    if (result == correctResult) {
         println("Success $name")
-    }else{
+    } else {
         println("Failed $name")
     }
 }

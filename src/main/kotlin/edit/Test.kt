@@ -22,7 +22,6 @@ fun main() {
         correctResult = "Amount must be greater than 0"
     )
 
-
     check(
         name = "Edit new category with valid category name should return true",
         result = FinanceTrackerImpl.editTransaction(transaction1.copy(category = Category("Food"))),
