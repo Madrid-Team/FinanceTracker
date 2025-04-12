@@ -1,10 +1,7 @@
 import FinanceTrackerImpl.loadTransactions
 import common.isValidCategory
 import common.parseDate
-import java.lang.Exception
 import java.time.LocalDate
-
-import java.util.*
 
 fun main() {
 
@@ -16,6 +13,10 @@ fun main() {
         Category("Freelance"),
         LocalDate.now()
     )
+
+    fileHandler()
+
+
     tracker.saveTransactions(transaction)
 
     val loaded = loadTransactions()
@@ -23,7 +24,67 @@ fun main() {
         println("- ${it.id} : ${it.type} .. ${it.amount} .. ${it.category} .. ${it.date}")
     }
     view()
+
 }
+
+
+private fun fileHandler() {
+    while (true) {
+        println(
+            """
+            --------------------------
+            Enter 1 to view all transactions
+            Enter 2 to add transaction
+            Enter 3 to delete transaction
+            Enter 4 to go back
+            --------------------------
+        """.trimIndent()
+        )
+
+        print("Selected option: ")
+
+        val option = try {
+            readln().toInt()
+        } catch (e: Exception) {
+            println("Please enter a valid number.")
+            continue
+        }
+
+        when (option) {
+            1 -> {
+                val loaded = loadTransactions()
+                loaded.forEach {
+                    println("- ${it.id} : ${it.type} .. ${it.amount} .. ${it.category} .. ${it.date}")
+                }
+            }
+
+            2 -> {
+                // todo add transaction by add sub-squad
+            }
+
+            3 -> {
+
+                print("Selected Transaction ID: ")
+                val transactionID = try {
+                    readln().toInt()
+                } catch (e: Exception) {
+                    println("Please enter a valid id.")
+                    continue
+                }
+                println(FinanceTrackerImpl.deleteTransactionFromFile(transactionID))
+
+
+            }
+
+            4 -> {
+                break
+            }
+        }
+
+
+    }
+}
+
 private fun view() {
 //    val tracker = FinanceTrackerImpl
 //    val transaction1 = Transaction(
@@ -79,7 +140,7 @@ private fun view() {
                 val month = if (monthInput.isNotBlank()) monthInput.toIntOrNull() else null
 
                 if (year != null) {
-                    val summary = FinanceTrackerImpl.getMonthlySummary(month?. minus(1), year)
+                    val summary = FinanceTrackerImpl.getMonthlySummary(month?.minus(1), year)
                     println("Income: ${summary.income}")
                     println("Expenses: ${summary.expenses}")
                     println("Remaining: ${summary.remaining}")
@@ -97,7 +158,7 @@ private fun view() {
 
                 val transactions = FinanceTrackerImpl.transactions
                 if (year != null) {
-                    val result = FinanceTrackerImpl.viewMostcategory(month?. minus(1), year, transactions)
+                    val result = FinanceTrackerImpl.viewMostcategory(month?.minus(1), year, transactions)
                     println(result)
                 } else {
                     println("Invalid year.")
@@ -106,10 +167,12 @@ private fun view() {
 
             4 -> break
 
+
             else -> println("Please choose from 1 to 4 only.")
         }
     }
 }
+
 private fun add() {
     var amount: Double? = null
     var type: TransactionType? = null
@@ -148,9 +211,9 @@ private fun add() {
     //add transaction category
     println("add transaction category")
     val categoryInput = readln()
-    if (categoryInput.isValidCategory()){
+    if (categoryInput.isValidCategory()) {
         category = Category(name = categoryInput)
-    }else {
+    } else {
         println("please enter a valid category")
         return
     }
@@ -159,13 +222,9 @@ private fun add() {
     val id = FinanceTrackerImpl.transactions.size + 1
 
 
-    transaction = Transaction(id,type,amount,category,date = LocalDate.now())
+    transaction = Transaction(id, type, amount, category, date = LocalDate.now())
     val transactions = FinanceTrackerImpl.transactions
     transactions.add(transaction)
-
-
-
-
 
 
 }
@@ -331,10 +390,10 @@ private fun deleteTransaction() {
                             println("Done")
                             break
                         }
-                    }catch (e:Exception){
+                    } catch (e: Exception) {
                         println("Please enter valid option: (y/n)")
                     }
-                }while (true)
+                } while (true)
 
             }
         } catch (e: Exception) {
