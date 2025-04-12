@@ -3,11 +3,11 @@ package edit
 import Category
 import Result
 import Transaction
-import java.util.*
+import java.time.LocalDate
 
 fun main() {
-    val transaction1 = Transaction(1, TransactionType.INCOME, 500.0, Category("Salary"), Date())
-    val transaction2 = Transaction(2, TransactionType.EXPENSES, 100.0, Category("Food"), Date())
+    val transaction1 = Transaction(1, TransactionType.INCOME, 500.0, Category("Salary"), LocalDate.now())
+    val transaction2 = Transaction(2, TransactionType.EXPENSES, 100.0, Category("Food"), LocalDate.now())
 
     check(
         name = "Edit existing transaction should return true",
