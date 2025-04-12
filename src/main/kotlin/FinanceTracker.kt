@@ -6,7 +6,7 @@ interface FinanceTracker {
     fun viewMostcategory(month: Int?, year: Int ,transaction : List<Transaction> ):String
     fun viewMinCategory(month: Int?, year: Int ,transaction : List<Transaction> ):String
     fun deleteTransaction(transactionId: Int):Boolean
-    fun add(transaction: Transaction): Result<Unit>
+    fun add(transaction: Transaction): Boolean
  }
 
 
