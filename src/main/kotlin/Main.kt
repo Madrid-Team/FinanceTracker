@@ -59,7 +59,8 @@ private fun add() {
 
 
     transaction = Transaction(id,type,amount,category,date = LocalDate.now())
-    val transactions = FinanceTrackerImpl.transactions.add(transaction)
+    val transactions = FinanceTrackerImpl.transactions
+    transactions.add(transaction)
 
 
 
