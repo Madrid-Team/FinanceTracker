@@ -10,6 +10,7 @@ fun main() {
     val transaction1 = Transaction(1, TransactionType.INCOME, 500.0, Category("Salary"), LocalDate.now())
     val transaction2 = Transaction(2, TransactionType.EXPENSES, 100.0, Category("Food"), LocalDate.now())
 
+
     check(
         name = "Edit existing transaction should return true",
         result = FinanceTrackerImpl.editTransaction(transaction1.copy(amount = 600.0)),
