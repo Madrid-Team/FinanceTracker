@@ -15,31 +15,47 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v3
 
-      - name : Notify Madrid Team - PR Opened
-      - uses: act10ns/slack@v2
-        if : github.event.action =='opened'
+      - name: Notify Madrid Team - PR Opened
+        uses: act10ns/slack@v2
+        if: github.event.action == 'opened'
         with:
           channel: 'madrid-squad'
           steps: ${{toJson(steps)}}
           payload: |
             {
-            "text":  "🚀 *New Pull Request* by @${{ github.actor }} → \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
+              "text": "🚀 *New Pull Request* by @${{ github.actor }} → `${{ github.head_ref }}` → `${{ github.base_ref }}`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
             }
         env:
           SLACK_WEBHOOK_URL: ${{secrets.SLACK_MADRID_CHAT_SECRET}}
 
-      - name : Notify Madrid Team - PR Opened
-      - uses: act10ns/slack@v2
-        if : github.event.action =='reopened'
+      - name: Notify Madrid Team - PR Reopened
+        uses: act10ns/slack@v2
+        if: github.event.action == 'reopened'
         with:
           channel: 'madrid-squad'
           steps: ${{toJson(steps)}}
           payload: |
             {
-            "text":  "🚀 *Reopened Pull Request* by @${{ github.actor }} → \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
+              "text": "🚀 *Reopened Pull Request* by @${{ github.actor }} → `${{ github.head_ref }}` → `${{ github.base_ref }}`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
             }
         env:
           SLACK_WEBHOOK_URL: ${{secrets.SLACK_MADRID_CHAT_SECRET}}
+
+      - name: Set Up Java 17 Environment
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Grant Execute Permission to Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: Run Unit Tests
+        run: ./gradlew test --no-daemon --stacktrace
+
+      - name: Execute Main Application (Main.kt)
+        run: ./gradlew run --no-daemon
 
       - name: Notify Slack — Tests Passed
         uses: act10ns/slack@v2
@@ -49,7 +65,7 @@ jobs:
           steps: ${{toJson(steps)}}
           payload: |
             {
-              "text": "✅ *All Tests Passed* on PR #${{ github.event.pull_request.number }} \`${{ github.head_ref }}\` -> \`${{ github.base_ref }}\ by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
+              "text": "✅ *All Tests Passed* on PR #${{ github.event.pull_request.number }} `${{ github.head_ref }}` → `${{ github.base_ref }}` by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
             }
         env:
           SLACK_WEBHOOK_URL: ${{secrets.SLACK_MADRID_CHAT_SECRET}}
@@ -62,7 +78,7 @@ jobs:
           steps: ${{toJson(steps)}}
           payload: |
             {
-              "text": "❌ *Test Execution Failed* on PR #${{ github.event.pull_request.number }} \`${{ github.head_ref }}\` -> \`${{ github.base_ref }}\  by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
+              "text": "❌ *Test Execution Failed* on PR #${{ github.event.pull_request.number }} `${{ github.head_ref }}` → `${{ github.base_ref }}` by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
             }
         env:
           SLACK_WEBHOOK_URL: ${{secrets.SLACK_MADRID_CHAT_SECRET}}
