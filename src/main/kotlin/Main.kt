@@ -1,3 +1,4 @@
+import FinanceTrackerImpl.loadTransactions
 import common.isValidCategory
 import common.parseDate
 import java.lang.Exception
@@ -8,7 +9,19 @@ import java.util.*
 fun main() {
 
 
+    val tracker = FinanceTrackerImpl
+    val transaction = Transaction(
+        7,
+        TransactionType.INCOME, 1500.0,
+        Category("Freelance"),
+        LocalDate.now()
+    )
+    tracker.saveTransactions(transaction)
 
+    val loaded = loadTransactions()
+    loaded.forEach {
+        println("- ${it.id} : ${it.type} .. ${it.amount} .. ${it.category} .. ${it.date}")
+    }
     view()
 }
 private fun view() {
@@ -105,8 +118,8 @@ private fun edit() {
     var amount: Double? = null
     var type: TransactionType? = null
     var date: LocalDate? = null
-    var option:Int? = null
-    var transaction:Transaction? = null
+    var option: Int? = null
+    var transaction: Transaction? = null
 
     do {
         println("Please enter transaction id:")
@@ -114,7 +127,7 @@ private fun edit() {
         try {
             val id = input.toInt()
             transaction = FinanceTrackerImpl.getTransactionById(id)
-            if(transaction == null){
+            if (transaction == null) {
                 println("Id not exist")
             }
         } catch (e: Exception) {
@@ -165,7 +178,7 @@ private fun edit() {
                         val input = readln()
                         category = if (input.isValidCategory()) input else null
                         transaction = transaction?.copy(
-                            category = Category(name = category!! )
+                            category = Category(name = category!!)
                         )
                     } catch (e: Exception) {
                         println("amount must be valid string")
@@ -186,20 +199,22 @@ private fun edit() {
                     )
                     try {
                         val input = readln().toInt()
-                        when(input){
-                            0 ->{
+                        when (input) {
+                            0 -> {
                                 type = TransactionType.INCOME
                                 transaction = transaction?.copy(
                                     type = type
                                 )
                             }
-                            1->{
+
+                            1 -> {
                                 type = TransactionType.EXPENSES
                                 transaction = transaction?.copy(
                                     type = type
                                 )
                             }
-                            else ->{
+
+                            else -> {
                                 println("please enter only 0 or 1")
                             }
                         }
@@ -209,7 +224,7 @@ private fun edit() {
                 } while (type == null)
             }
 
-            4 ->{
+            4 -> {
 
                 do {
                     println("Please enter valid date (yy-mm-dd):")
@@ -224,6 +239,7 @@ private fun edit() {
                     }
                 } while (date == null)
             }
+
             5 -> {
                 transaction?.let {
                     FinanceTrackerImpl.editTransaction(transaction)
