@@ -1,7 +1,5 @@
 import common.isValidCategory
-
 import java.time.LocalDate
-import java.time.Month
 import java.util.*
 
 object FinanceTrackerImpl : FinanceTracker {
@@ -9,19 +7,15 @@ object FinanceTrackerImpl : FinanceTracker {
     private val _transactions: MutableList<Transaction> = mutableListOf()
 
 
-
-
-
-
     override fun add(transaction: Transaction): Boolean {
-            if (transaction.amount <= 0) return false
-            if (transaction.category.name.isBlank()) return false
-            if (transaction.date.isAfter(LocalDate.now())) return false
-            else{
-                _transactions.add(transaction)
-                return true
-
-            }
+        if (transaction.amount <= 0) return false
+        if (transaction.category.name.isBlank()) return false
+        if (transaction.date.isAfter(LocalDate.now())) return false
+        else {
+            _transactions.add(transaction)
+            return true
+        }
+    }
 
     fun getTransactionById(transactionId: Int): Transaction? {
         return _transactions.find { it.id == transactionId }
@@ -41,7 +35,6 @@ object FinanceTrackerImpl : FinanceTracker {
             return str.trim()
         }
     }
-
 
 
     override fun editTransaction(
@@ -72,7 +65,10 @@ object FinanceTrackerImpl : FinanceTracker {
     override fun getMonthlySummary(month: Int?, year: Int): Summary {
         if (!_transactions.isNullOrEmpty()) {
             val monthTransaction =
-                _transactions.filter { if (month != null && month in 0..11) it.date.month == month && it.date.year == year else it.date.year == year }
+                _transactions.filter {
+                    if (month != null && month in 0..11) it.date.month.toString()
+                        .toInt() == month && it.date.year == year else it.date.year == year
+                }
             val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
             val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }
             val remaining = totalIncome - totalExpenses
@@ -85,7 +81,7 @@ object FinanceTrackerImpl : FinanceTracker {
     override fun viewMostcategory(month: Int?, year: Int, transaction: List<Transaction>): String {
         if (transaction.isNotEmpty()) {
             val monthTransaction: List<Transaction> = transaction.filter {
-                if (month != null && month in 0..11) it.date.month. == month && it.date.year == year
+                if (month != null && month in 0..11) it.date.month.toString().toInt() == month && it.date.year == year
                 else it.date.year == year
             }
             val mostFrequent = monthTransaction
@@ -102,7 +98,7 @@ object FinanceTrackerImpl : FinanceTracker {
     override fun viewMinCategory(month: Int?, year: Int, transaction: List<Transaction>): String {
         if (transaction.isNotEmpty()) {
             val monthTransaction: List<Transaction> = transaction.filter {
-                if (month != null && month in 0..11) it.date.month == month && it.date.year == year
+                if (month != null && month in 0..11) it.date.month.toString().toInt() == month && it.date.year == year
                 else it.date.year == year
             }
 
@@ -115,5 +111,5 @@ object FinanceTrackerImpl : FinanceTracker {
             return "The List is empty "
         }
     }
-
 }
+
