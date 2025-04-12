@@ -1,0 +1,56 @@
+name: CI | Pull Request Validation
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
+    branches:
+      - develop
+
+jobs:
+  validate-pr:
+    name: PR Validation Workflow
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Notify Slack — PR Opened or Ready for Review
+        if: github.event.action == 'opened' || github.event.action == 'reopened' || github.event.action == 'ready_for_review'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"text\": \"🚀 *New Pull Request* opened by @${{ github.actor }} → \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
+          }" ${{ secrets.SLACK_SECRET }}
+
+      - name: Set Up Java 17 Environment
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Grant Execute Permission to Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: Run Unit Tests
+        run: ./gradlew test --no-daemon --stacktrace
+
+      - name: Execute Main Application (Main.kt)
+        run: ./gradlew run --no-daemon
+
+      - name: Notify Slack — Tests Passed
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"text\": \"✅ *All Tests Passed* on PR #${{ github.event.pull_request.number }} by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
+          }" ${{ secrets.SLACK_SECRET }}
+
+      - name: Notify Slack — Tests Failed
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"text\": \"❌ *Test Execution Failed* on PR #${{ github.event.pull_request.number }} by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
+          }" ${{ secrets.SLACK_SECRET }}
