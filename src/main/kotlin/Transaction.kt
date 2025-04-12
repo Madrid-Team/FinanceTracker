@@ -1,4 +1,4 @@
-import java.util.Date
+import java.time.LocalDate
 
 data class Transaction (
     val id:Int,

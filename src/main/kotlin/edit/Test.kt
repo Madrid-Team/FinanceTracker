@@ -1,8 +1,9 @@
 package edit
 
 import Category
-import Result
+import FinanceTrackerImpl
 import Transaction
+import TransactionType
 import java.time.LocalDate
 
 fun main() {
@@ -12,35 +13,56 @@ fun main() {
     check(
         name = "Edit existing transaction should return true",
         result = FinanceTrackerImpl.editTransaction(transaction1.copy(amount = 600.0)),
-        correctResult = Result.Success(Unit)
+        correctResult = "edit operation succeeded"
     )
 
     check(
         name = "Edit with invalid amount should return Error",
         result = FinanceTrackerImpl.editTransaction(transaction2.copy(amount = -100.0)),
-        correctResult = Result.Error("Amount must be greater than 0")
+        correctResult = "Amount must be greater than 0"
     )
 
 
     check(
         name = "Edit new category with valid category name should return true",
         result = FinanceTrackerImpl.editTransaction(transaction1.copy(category = Category("Food"))),
-        correctResult = Result.Success(Unit)
+        correctResult = "edit operation succeeded"
     )
 
     check(
         name = "Edit with invalid category name should return Error",
         result = FinanceTrackerImpl.editTransaction(transaction1.copy(category = Category("12@"))),
-        correctResult = Result.Error("please provide a valid category name with more than 3 characters and no special characters")
+        correctResult = "please provide a valid category name with more than 3 characters and no special characters"
     )
+
+    check(
+        name = "Edit transaction with empty category name should return Error",
+        result = FinanceTrackerImpl.editTransaction(transaction1.copy(category = Category(""))),
+        correctResult = "please provide a valid category name with more than 3 characters and no special characters"
+    )
+
+   check(
+       name ="Edit date in the Future should return Error",
+       result = FinanceTrackerImpl.editTransaction(transaction1.copy(date = LocalDate.now().plusDays(1))),
+       correctResult = "Date cannot be in the Future",
+   )
+    check(
+        name = "Edit transaction date in acceptable past should return true",
+        result = FinanceTrackerImpl.editTransaction(transaction1.copy(date = LocalDate.now().minusDays(1))),
+        correctResult = "edit operation succeeded"
+        )
+
+    check(
+        name = "Edit transaction Date in way past should return Error",
+        result = FinanceTrackerImpl.editTransaction(transaction1.copy(date = LocalDate.now().minusYears(100))),
+        correctResult = "Date is too far in the past"
+    )
+
+
 }
 
-fun <T> check(name: String, result: Result<T>, correctResult: Result<Unit>) {
-    val passed = when {
-        result is Result.Success && correctResult is Result.Success -> result.data == correctResult.data
-        result is Result.Error && correctResult is Result.Error -> result.cause == correctResult.cause
-        else -> false
-    }
+fun check(name: String, result: String, correctResult: String) {
+    val passed = result == correctResult
 
     if (passed) {
         println("Success : $name")
