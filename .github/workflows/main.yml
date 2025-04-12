@@ -20,6 +20,7 @@ jobs:
         if: github.event.action == 'opened'
         with:
           channel: 'madrid-squad'
+          status: pending
           steps: ${{toJson(steps)}}
           message: "🚀 *New Pull Request* by @${{ github.actor }} → `${{ github.head_ref }}` → `${{ github.base_ref }}`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
         env:
@@ -30,6 +31,7 @@ jobs:
         if: github.event.action == 'reopened'
         with:
           channel: 'madrid-squad'
+          status: pending
           steps: ${{toJson(steps)}}
           message: "🚀 *Reopened Pull Request* by @${{ github.actor }} → `${{ github.head_ref }}` → `${{ github.base_ref }}`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
         env:
@@ -49,6 +51,7 @@ jobs:
         if: success()
         with:
           channel: 'madrid-squad'
+          status: success
           steps: ${{toJson(steps)}}
           message: "✅ *All Tests Passed* on PR #${{ github.event.pull_request.number }} `${{ github.head_ref }}` → `${{ github.base_ref }}` by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
         env:
@@ -59,6 +62,7 @@ jobs:
         if: failure()
         with:
           channel: 'madrid-squad'
+          status: failure
           steps: ${{toJson(steps)}}
           message: "❌ *Test Execution Failed* on PR #${{ github.event.pull_request.number }} `${{ github.head_ref }}` → `${{ github.base_ref }}` by @${{ github.actor }}\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>"
         env:
