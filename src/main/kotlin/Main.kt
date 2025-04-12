@@ -9,7 +9,64 @@ fun main() {
 
 
 }
+private fun add() {
+    var amount: Double? = null
+    var type: TransactionType? = null
+    var transaction: Transaction? = null
+    var category: Category? = null
 
+
+    println("Add transaction amount")
+    amount = readln().toDouble()
+    try {
+        if (amount <= 0)
+            println("amount is not valid - Enter a number bigger than zero")
+    } catch (e: Exception) {
+        println("amount must be a valid value")
+
+    }
+    println("Add transaction type")
+    println(
+        """
+        Enter 1 for -> Income  
+        Enter 2 for -> Expenses
+        
+        """.trimIndent()
+
+    )
+
+    val input = readln().toInt()
+    type = when (input) {
+        1 -> TransactionType.INCOME
+        2 -> TransactionType.EXPENSES
+        else -> {
+            println("Enter a valid value - either 1 for income or 2 for expenses")
+            return
+        }
+    }
+    //add transaction category
+    println("add transaction category")
+    val categoryInput = readln()
+    if (categoryInput.isValidCategory()){
+        category = Category(name = categoryInput)
+    }else {
+        println("please enter a valid category")
+        return
+    }
+
+    //id
+    val id = FinanceTrackerImpl.transactions.size + 1
+
+
+    transaction = Transaction(id,type,amount,category,date = LocalDate.now())
+    val transactions = FinanceTrackerImpl.transactions.add(transaction)
+
+
+
+
+
+
+}
 
 private fun edit() {
 

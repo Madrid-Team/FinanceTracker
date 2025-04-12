@@ -5,7 +5,7 @@ import java.util.*
 object FinanceTrackerImpl : FinanceTracker {
 
     private val _transactions: MutableList<Transaction> = mutableListOf()
-
+    val transactions = _transactions
 
     override fun add(transaction: Transaction): Boolean {
         if (transaction.amount <= 0) return false
