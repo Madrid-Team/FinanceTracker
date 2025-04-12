@@ -20,11 +20,11 @@ jobs:
         if : github.event.action =='opened'
         with:
           channel: 'madrid-squad'
-        steps: ${{toJson(steps)}}
-        payload: |
-          {
-          "text":  "🚀 *New Pull Request* by @${{ github.actor }} → \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
-          }
+          steps: ${{toJson(steps)}}
+          payload: |
+            {
+            "text":  "🚀 *New Pull Request* by @${{ github.actor }} → \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
+            }
         env:
           SLACK_WEBHOOK_URL: ${{secrets.SLACK_MADRID_CHAT_SECRET}}
 
@@ -33,11 +33,11 @@ jobs:
         if : github.event.action =='reopened'
         with:
           channel: 'madrid-squad'
-        steps: ${{toJson(steps)}}
-        payload: |
-          {
-          "text":  "🚀 *Reopened Pull Request* by @${{ github.actor }} → \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
-          }
+          steps: ${{toJson(steps)}}
+          payload: |
+            {
+            "text":  "🚀 *Reopened Pull Request* by @${{ github.actor }} → \`${{ github.head_ref }}\` → \`${{ github.base_ref }}\`\n🔗 <${{ github.event.pull_request.html_url }}|View Pull Request>\"
+            }
         env:
           SLACK_WEBHOOK_URL: ${{secrets.SLACK_MADRID_CHAT_SECRET}}
 
