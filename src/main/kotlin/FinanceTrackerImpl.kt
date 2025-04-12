@@ -7,6 +7,7 @@ class FinanceTrackerImpl(logger: Logger) : FinanceTracker, Logger by logger {
 
     override fun add(transaction: Transaction) {
         println("Added transaction ${transaction.date}")
+        log("Added transaction: ${transaction}")
     }
 
     override fun viewAllTransactions(transactions: List<Transaction>): String {
@@ -20,16 +21,21 @@ class FinanceTrackerImpl(logger: Logger) : FinanceTracker, Logger by logger {
                 str += " Category: ${trasaction.category.name}\n"
                 str += " Date: ${trasaction.date}\n"
             }
+            val viewTransaction = str.trim()
+            println(viewTransaction)
+            log("This is all Transaction: $viewTransaction")
             return str.trim()
         }
     }
 
     override fun editTransaction(transactionId: Int) {
-        TODO("Not yet implemented")
+        println("Edited Transaction of ID $transactionId")
+        log("Edited Transaction of ID $transactionId")
     }
 
     override fun deleteTransaction(transactionId: Int) {
-        println("Deleted Transaction")
+        println("Deleted Transaction of ID $transactionId")
+        log("Deleted Transaction of ID $transactionId")
     }
 
     override fun getMonthlySummary(month: Int?, year: Int): Summary {
@@ -39,7 +45,9 @@ class FinanceTrackerImpl(logger: Logger) : FinanceTracker, Logger by logger {
         val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
         val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }
         val remaining = totalIncome - totalExpenses
-        println("Income $totalIncome Expenses: $totalExpenses")
+
+        println("Income $totalIncome Expenses: $totalExpenses Remaining: $remaining")
+        log("Summary of $month Month is:  Income $totalIncome Expenses: $totalExpenses Remaining: $remaining ")
         return Summary(income = totalIncome, expenses = totalExpenses, remaining = remaining)
     }
         else{

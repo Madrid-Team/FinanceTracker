@@ -13,6 +13,7 @@ fun main() {
     financeTracker.add(transaction1)
     financeTracker.add(transaction2)
     financeTracker.add(transaction3)
+    financeTracker.viewAllTransactions(listOf(transaction1,transaction2,transaction3))
     financeTracker.deleteTransaction(2)
 
 
