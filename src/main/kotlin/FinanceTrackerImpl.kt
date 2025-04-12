@@ -1,27 +1,29 @@
 import common.isValidCategory
-
-import java.time.LocalDate
-import java.time.Month
-import java.util.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File
+import java.time.LocalDate
 
 object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
 
+    private val filePath = "transactions.json"
     private val _transactions: MutableList<Transaction> = mutableListOf()
-    val transactions = _transactions
+    val transactions: List<Transaction> get() = _transactions
+
+    init {
+        // تحميل المعاملات من الملف عند بداية التشغيل
+        _transactions.addAll(loadTransactions())
+    }
 
     override fun add(transaction: Transaction): Boolean {
         if (transaction.amount <= 0) return false
         if (transaction.category.name.isBlank()) return false
         if (transaction.date.isAfter(LocalDate.now())) return false
-        else {
-            _transactions.add(transaction)
-            return true
-        }
-    }
 
+        _transactions.add(transaction)
+        saveToFile()
+        return true
+    }
 
     fun getTransactionById(transactionId: Int): Transaction? {
         return _transactions.find { it.id == transactionId }
@@ -29,148 +31,94 @@ object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
 
     override fun viewAllTransactions(transactions: List<Transaction>): String {
         if (transactions.isEmpty()) return "No transactions found."
-        else {
-            var str = ""
-            for (trasaction in transactions) {
-                str += " ID: ${trasaction.id}\n"
-                str += " Type: ${trasaction.type}\n"
-                str += " Amount: ${trasaction.amount}\n"
-                str += " Category: ${trasaction.category.name}\n"
-                str += " Date: ${trasaction.date}\n"
-            }
-            return str.trim()
+        return transactions.joinToString("\n\n") {
+            """
+            ID: ${it.id}
+            Type: ${it.type}
+            Amount: ${it.amount}
+            Category: ${it.category.name}
+            Date: ${it.date}
+            """.trimIndent()
         }
     }
 
+    override fun editTransaction(transaction: Transaction): String {
+        if (transaction.amount <= 0) return "Amount must be greater than 0"
+        if (!transaction.category.name.isValidCategory()) return "Invalid category name"
+        if (transaction.date.isAfter(LocalDate.now())) return "Date cannot be in the future"
+        if (transaction.date.isBefore(LocalDate.now().minusYears(2))) return "Date is too far in the past"
 
-    override fun editTransaction(
-        transaction: Transaction,
-    ): String {
-        return when {
-            transaction.amount <= 0 -> "Amount must be greater than 0"
-            !transaction.category.name.isValidCategory() -> "please provide a valid category name with more than 3 characters and no special characters"
-            transaction.date.isAfter(LocalDate.now()) -> "Date cannot be in the Future"
-            transaction.date.isBefore(LocalDate.now().minusYears(2)) -> "Date is too far in the past"
-            else -> {
-                val transactionIndex = _transactions.indexOfFirst { it.id == transaction.id }
-                return if (transactionIndex != -1) {
-                    _transactions[transactionIndex] = transaction
-                    "edit operation succeeded"
-                } else {
-                    "Transaction not found"
-                }
-            }
+        val index = _transactions.indexOfFirst { it.id == transaction.id }
+        return if (index != -1) {
+            _transactions[index] = transaction
+            saveToFile()
+            "Edit operation succeeded"
+        } else {
+            "Transaction not found"
         }
-
     }
-
 
     override fun deleteTransaction(transactionId: Int): Boolean {
-        return _transactions.removeIf { it.id == transactionId }
+        val removed = _transactions.removeIf { it.id == transactionId }
+        if (removed) saveToFile()
+        return removed
+    }
+
+    override fun deleteTransactionFromFile(transactionId: Int): String {
+        return if (deleteTransaction(transactionId)) {
+            "Transaction deleted successfully"
+        } else {
+            "Invalid ID, try again with another ID"
+        }
     }
 
     override fun getMonthlySummary(month: Int?, year: Int): Summary {
-        if (!_transactions.isNullOrEmpty()) {
-            val monthTransaction =
-                _transactions.filter {
-                    if (month != null && month in 0..11) it.date.month.toString()
-                        .toInt() == month && it.date.year == year else it.date.year == year
-                }
-            val totalIncome = monthTransaction.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
-            val totalExpenses = monthTransaction.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }
-            val remaining = totalIncome - totalExpenses
-            return Summary(income = totalIncome, expenses = totalExpenses, remaining = remaining)
-        } else {
-            return Summary(income = 0.0, expenses = 0.0, remaining = 0.0)
+        val filtered = _transactions.filter {
+            (month == null || it.date.monthValue == month) && it.date.year == year
         }
+        val income = filtered.filter { it.type == TransactionType.INCOME }.sumOf { it.amount }
+        val expenses = filtered.filter { it.type == TransactionType.EXPENSES }.sumOf { it.amount }
+        return Summary(income, expenses, income - expenses)
     }
 
-    override fun viewMostcategory(month: Int?, year: Int, transaction: List<Transaction>): String {
-        if (transaction.isNotEmpty()) {
-            val monthTransaction: List<Transaction> = transaction.filter {
-                if (month != null && month in 0..11) it.date.month.toString().toInt() == month && it.date.year == year
-                else it.date.year == year
-            }
-            val mostFrequent = monthTransaction
-                .groupingBy { it.category.name }
-                .eachCount()
-                .maxByOrNull { it.value }
-            return "most category is  ${mostFrequent?.key} appears ${mostFrequent?.value}"
-        } else {
-            return "The List is empty "
+    override fun viewMostCategory(month: Int?, year: Int, transaction: List<Transaction>): String {
+        val filtered = transaction.filter {
+            (month == null || it.date.monthValue == month) && it.date.year == year
         }
+        val most = filtered.groupingBy { it.category.name }
+            .eachCount()
+            .maxByOrNull { it.value }
 
+        return if (most != null) "Most category is ${most.key}, appears ${most.value}" else "No data"
     }
 
     override fun viewMinCategory(month: Int?, year: Int, transaction: List<Transaction>): String {
-        if (transaction.isNotEmpty()) {
-            val monthTransaction: List<Transaction> = transaction.filter {
-                if (month != null && month in 0..11) it.date.month.toString().toInt() == month && it.date.year == year
-                else it.date.year == year
-            }
-
-            val leastFrequent = monthTransaction
-                .groupingBy { it.category.name }
-                .eachCount()
-                .minByOrNull { it.value }
-            return "most category is  ${leastFrequent?.key} appears ${leastFrequent?.value}"
-        } else {
-            return "The List is empty "
+        val filtered = transaction.filter {
+            (month == null || it.date.monthValue == month) && it.date.year == year
         }
+        val least = filtered.groupingBy { it.category.name }
+            .eachCount()
+            .minByOrNull { it.value }
+
+        return if (least != null) "Least category is ${least.key}, appears ${least.value}" else "No data"
     }
 
-    private val filePath = "transactions.json"
-
-    override fun saveTransactions(transactions: Transaction) {
-        val file = File(filePath)
-
-        val existing = if (file.exists()) {
-            val json = file.readText()
-            Json.decodeFromString<List<Transaction>>(json)
-        } else {
-            emptyList()
-        }
-
-        val allTransactions = (existing + transactions)
-            .distinctBy { it.id }
-
-
-        val updatedJson = Json.encodeToString(allTransactions)
-        file.writeText(updatedJson)
+    override fun saveTransactions(transaction: Transaction) {
+        add(transaction)
     }
-
 
     override fun loadTransactions(): List<Transaction> {
         val file = File(filePath)
-        if (!file.exists()) return emptyList()
-        val json = file.readText()
-        return Json.decodeFromString(json)
+        return if (file.exists()) {
+            val json = file.readText()
+            Json.decodeFromString(json)
+        } else {
+            emptyList()
+        }
     }
 
-
-    override  fun deleteTransactionFromFile(transactionId: Int): String {
+    private fun saveToFile() {
         val file = File(filePath)
-
-        if (!file.exists()) {
-            // Nothing to delete if file doesn't exist
-            return "file doesn't exist"
-        }
-
-        //    t1        t2          t3             t4                   4
-        val existingJson = file.readText()
-        val existingTransactions = Json.decodeFromString<List<Transaction>>(existingJson)
-
-        // Filter out the transaction with the specified ID
-        val updatedTransactions = existingTransactions.filter { it.id != transactionId }
-
-        // If no transaction was removed, we can return early
-        if (updatedTransactions.size == existingTransactions.size) {
-            return "invalid ID, try again with other ID"
-        }
-
-        // Save the updated list back to the file
-        val updatedJson = Json.encodeToString(updatedTransactions)
-        file.writeText(updatedJson)
-        return "transaction deleted successfully"
+        file.writeText(Json.encodeToString(_transactions))
     }
 }

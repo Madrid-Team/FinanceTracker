@@ -11,7 +11,7 @@ fun main() {
         type = TransactionType.EXPENSES,
         amount = 50.0,
         category = categoryFood,
-        date = LocalDate.of(2025,4,5) // April 5, 2025
+        date = LocalDate.of(2025, 4, 5) // April 5, 2025
     )
 
     val transaction2 = Transaction(
@@ -19,10 +19,10 @@ fun main() {
         type = TransactionType.INCOME,
         amount = 1000.0,
         category = categorySalary,
-        date = LocalDate.of(2025 , 3, 1)
+        date = LocalDate.of(2025, 3, 1)
     )
     val transactions = listOf(transaction1)
-    val listOfTwoTransactions = listOf(transaction1,transaction2)
+    val listOfTwoTransactions = listOf(transaction1, transaction2)
     val expected = """
    ID: 1
  Type: EXPENSES
