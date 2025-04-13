@@ -1,6 +1,7 @@
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Category(
-    val name: String,
-)
+enum class TransactionType {
+    INCOME,
+    EXPENSES
+}

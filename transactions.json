@@ -1,0 +1,1 @@
+[{"id":5,"type":"EXPENSES","amount":55555.0,"category":{"name":"Food"},"date":"2025-04-11"},{"id":6,"type":"INCOME","amount":1000.0,"category":{"name":"Income"},"date":"2025-04-11"},{"id":3,"type":"INCOME","amount":2323.0,"category":{"name":"Food"},"date":"2025-04-12"}]
