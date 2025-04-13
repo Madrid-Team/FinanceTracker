@@ -11,7 +11,6 @@ object FinanceTrackerImpl : FinanceTracker, TransactionStorage {
     val transactions: List<Transaction> get() = _transactions
 
     init {
-        // تحميل المعاملات من الملف عند بداية التشغيل
         _transactions.addAll(loadTransactions())
     }
 
